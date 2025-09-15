@@ -70,7 +70,6 @@ gallus-cozinha/
 ## Contato do Negócio
 
 ### Gallus Cozinha
-- **WhatsApp**: [(19) 99225-5011](https://wa.me/5519992255011)
 - **WhatsApp**: [(19) 97117-4929](https://wa.me/5519971174929)
 - **Email**: [lucasmguastali@gmail.com](mailto:lucasmguastali@gmail.com)
 - **Instagram**: [@gallus.cozinha](https://instagram.com/gallus.cozinha)

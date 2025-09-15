@@ -201,7 +201,7 @@ contactForm.addEventListener('submit', function(e) {
 
     // Gerar URL WhatsApp
     const encodedMessage = encodeURIComponent(whatsappMessage);
-    const whatsappURL = `https://wa.me/5519992255011?text=${encodedMessage}`;
+    const whatsappURL = `https://wa.me/5519971174929?text=${encodedMessage}`;
 
     // Animação de feedback no botão
     const submitBtn = this.querySelector('.btn-form');
@@ -498,6 +498,61 @@ if ('serviceWorker' in navigator) {
  * - Notificações push
  * - Cache offline
  */
+
+/* ========================================
+   18. SISTEMA WHATSAPP INTELIGENTE
+   ======================================== */
+
+/**
+ * Detecta o tipo de dispositivo e gera link WhatsApp apropriado
+ * Mobile: wa.me (melhor compatibilidade com apps nativos)
+ * Desktop: api.whatsapp.com (melhor para WhatsApp Web)
+ */
+function isMobileDevice() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
+/**
+ * Gera URL WhatsApp inteligente baseada no dispositivo
+ * @param {string} phone - Número de telefone
+ * @param {string} message - Mensagem pré-programada
+ * @returns {string} URL otimizada para o dispositivo
+ */
+function generateWhatsAppURL(phone, message) {
+    const encodedMessage = encodeURIComponent(message);
+
+    if (isMobileDevice()) {
+        // Mobile: usar wa.me para melhor compatibilidade com app nativo
+        return `https://wa.me/${phone}?text=${encodedMessage}`;
+    } else {
+        // Desktop: usar api.whatsapp.com para WhatsApp Web
+        return `https://api.whatsapp.com/send?phone=${phone}&text=${encodedMessage}`;
+    }
+}
+
+/**
+ * Inicializa todos os links WhatsApp com detecção inteligente
+ */
+function initWhatsAppLinks() {
+    const whatsappLinks = document.querySelectorAll('[data-whatsapp]');
+
+    whatsappLinks.forEach(link => {
+        const phone = link.dataset.whatsappPhone || '5519971174929';
+        const message = link.dataset.whatsappMessage || 'Olá! Gostaria de conhecer mais sobre os serviços do Gallus Cozinha';
+
+        link.href = generateWhatsAppURL(phone, message);
+
+        // Adicionar event listener para garantir URL atualizada
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const updatedURL = generateWhatsAppURL(phone, message);
+            window.open(updatedURL, '_blank', 'noopener,noreferrer');
+        });
+    });
+}
+
+// Inicializar links WhatsApp quando DOM estiver pronto
+document.addEventListener('DOMContentLoaded', initWhatsAppLinks);
 
 // Objeto global para funcionalidades da Gallus Cozinha
 window.GallusCozinha = {
