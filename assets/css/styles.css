@@ -1298,3 +1298,67 @@ body.loaded {
         scroll-behavior: auto !important;
     }
 }
+
+/* ========================================
+   15. CHEF ICON DECORATIVO
+   ======================================== */
+
+.hero-chef-icon {
+    position: absolute;
+    top: 20%;
+    right: 5%;
+    z-index: 2;
+    opacity: 0.15;
+    pointer-events: none;
+    animation: float 6s ease-in-out infinite;
+}
+
+.chef-decorative {
+    width: 120px;
+    height: 120px;
+    filter: sepia(1) saturate(2) hue-rotate(35deg) brightness(0.8);
+    transition: all 0.3s ease;
+}
+
+/* Animação flutuante sutil */
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-15px);
+    }
+}
+
+/* Responsividade do chef icon */
+@media (max-width: 1024px) {
+    .hero-chef-icon {
+        top: 15%;
+        right: 3%;
+        opacity: 0.1;
+    }
+
+    .chef-decorative {
+        width: 100px;
+        height: 100px;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-chef-icon {
+        top: 10%;
+        right: 2%;
+        opacity: 0.08;
+    }
+
+    .chef-decorative {
+        width: 80px;
+        height: 80px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-chef-icon {
+        display: none; /* Esconder em telas muito pequenas para não atrapalhar */
+    }
+}
