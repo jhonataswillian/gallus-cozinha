@@ -1,0 +1,29 @@
+{
+  "name": "gallus-cozinha",
+  "version": "1.0.0",
+  "description": "> Landing page profissional desenvolvida para chef particular em Americana/SP",
+  "main": "index.js",
+  "scripts": {
+    "format": "prettier --write \"**/*.{html,css,js}\"",
+    "format:check": "prettier --check \"**/*.{html,css,js}\"",
+    "lint": "eslint \"**/*.js\"",
+    "lint:fix": "eslint \"**/*.js\" --fix",
+    "start": "python3 -m http.server 8000",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jhonataswillian/gallus-cozinha.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jhonataswillian/gallus-cozinha/issues"
+  },
+  "homepage": "https://github.com/jhonataswillian/gallus-cozinha#readme",
+  "devDependencies": {
+    "eslint": "^8.57.1",
+    "prettier": "^3.6.2"
+  }
+}
