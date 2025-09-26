@@ -176,6 +176,8 @@ document.querySelectorAll('[data-aos]').forEach(el => {
 contactForm.addEventListener('submit', function (e) {
   e.preventDefault();
 
+  console.log('Formulário enviado!');
+
   // Capturar dados do formulário
   const formData = new FormData(this);
   const name = formData.get('name');
@@ -185,6 +187,16 @@ contactForm.addEventListener('submit', function (e) {
   const date = formData.get('date');
   const guests = formData.get('guests');
   const message = formData.get('message');
+
+  console.log('Dados do formulário:', {
+    name,
+    phone,
+    email,
+    eventType,
+    date,
+    guests,
+    message,
+  });
 
   // Construir mensagem WhatsApp estruturada
   let whatsappMessage = `*Nova solicitação - Gallus Cozinha*\n\n`;
@@ -211,6 +223,10 @@ contactForm.addEventListener('submit', function (e) {
   // Gerar URL WhatsApp usando detecção inteligente de dispositivo
   const whatsappURL = generateWhatsAppURL('5519971174929', whatsappMessage);
 
+  // Debug: mostrar URL no console
+  console.log('WhatsApp URL:', whatsappURL);
+  console.log('É mobile?', isMobileDevice());
+
   // Animação de feedback no botão
   const submitBtn = this.querySelector('.btn-form');
   const originalText = submitBtn.innerHTML;
@@ -218,34 +234,10 @@ contactForm.addEventListener('submit', function (e) {
   submitBtn.innerHTML = '<i class="fas fa-check"></i> Redirecionando...';
   submitBtn.style.background = 'linear-gradient(135deg, #25D366, #128C7E)';
 
-  // Redirecionar para WhatsApp com melhor compatibilidade mobile
+  // Redirecionar para WhatsApp - abordagem universal
   setTimeout(() => {
-    try {
-      if (isMobileDevice()) {
-        // Em mobile, tentar múltiplas abordagens para máxima compatibilidade
-        const link = document.createElement('a');
-        link.href = whatsappURL;
-        link.target = '_blank';
-        link.rel = 'noopener noreferrer';
-
-        // Tentar primeiro com click simulado
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-
-        // Fallback: usar window.open se disponível
-        setTimeout(() => {
-          window.open(whatsappURL, '_blank', 'noopener,noreferrer');
-        }, 100);
-      } else {
-        // Em desktop, usar window.open
-        window.open(whatsappURL, '_blank', 'noopener,noreferrer');
-      }
-    } catch (error) {
-      // Fallback em caso de erro
-      console.warn('Erro ao abrir WhatsApp:', error);
-      window.open(whatsappURL, '_blank', 'noopener,noreferrer');
-    }
+    // Usar window.open sempre, mas com target específico para mobile
+    window.open(whatsappURL, '_blank', 'noopener,noreferrer');
 
     // Reset do botão e limpeza do formulário
     setTimeout(() => {
@@ -540,14 +532,8 @@ function isMobileDevice() {
  */
 function generateWhatsAppURL(phone, message) {
   const encodedMessage = encodeURIComponent(message);
-
-  if (isMobileDevice()) {
-    // Mobile: usar wa.me para melhor compatibilidade com app nativo
-    return `https://wa.me/${phone}?text=${encodedMessage}`;
-  } else {
-    // Desktop: usar api.whatsapp.com para WhatsApp Web
-    return `https://api.whatsapp.com/send?phone=${phone}&text=${encodedMessage}`;
-  }
+  // Usar sempre wa.me para máxima compatibilidade
+  return `https://wa.me/${phone}?text=${encodedMessage}`;
 }
 
 /**
