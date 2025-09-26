@@ -276,11 +276,26 @@ function handleFormSubmit(e) {
   submitBtn.innerHTML = '<i class="fas fa-check"></i> Redirecionando...';
   submitBtn.style.background = 'linear-gradient(135deg, #25D366, #128C7E)';
 
-  // Redirecionar para WhatsApp - abordagem universal
+  // Redirecionar para WhatsApp - MESMA LÓGICA DO BOTÃO FLUTUANTE
   setTimeout(() => {
     showDebug('Tentando abrir WhatsApp...');
-    // Usar window.open sempre, mas com target específico para mobile
-    window.open(whatsappURL, '_blank', 'noopener,noreferrer');
+
+    // Usar exatamente a mesma abordagem dos links WhatsApp
+    try {
+      window.open(whatsappURL, '_blank', 'noopener,noreferrer');
+      showDebug('Window.open executado!');
+    } catch (error) {
+      showDebug('Erro: ' + error.message);
+      // Fallback: criar link temporário e clicar
+      const tempLink = document.createElement('a');
+      tempLink.href = whatsappURL;
+      tempLink.target = '_blank';
+      tempLink.rel = 'noopener noreferrer';
+      document.body.appendChild(tempLink);
+      tempLink.click();
+      document.body.removeChild(tempLink);
+      showDebug('Link temporário usado!');
+    }
 
     // Reset do botão e limpeza do formulário
     setTimeout(() => {
@@ -288,7 +303,7 @@ function handleFormSubmit(e) {
       submitBtn.style.background = '';
       this.reset();
     }, 2000);
-  }, 1000);
+  }, 500); // Reduzir delay para 500ms
 }
 
 /* ========================================
