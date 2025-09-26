@@ -173,7 +173,48 @@ document.querySelectorAll('[data-aos]').forEach(el => {
  * Processamento do formulário de contato
  * Redireciona para WhatsApp com dados formatados
  */
-contactForm.addEventListener('submit', function (e) {
+
+// Verificar se o formulário existe
+if (!contactForm) {
+  console.error('Formulário não encontrado! ID: contactForm');
+  // Mostrar debug na tela
+  const debugDiv = document.createElement('div');
+  debugDiv.style.cssText = `
+    position: fixed; top: 10px; left: 10px; right: 10px;
+    background: #f00; color: #fff; padding: 10px;
+    border-radius: 5px; z-index: 9999; font-size: 12px;
+  `;
+  debugDiv.textContent = 'ERRO: Formulário não encontrado!';
+  document.body.appendChild(debugDiv);
+} else {
+  console.log('Formulário encontrado!');
+}
+
+// Abordagem alternativa - aguardar DOM carregar completamente
+document.addEventListener('DOMContentLoaded', function () {
+  const form =
+    document.getElementById('contactForm') ||
+    document.querySelector('.contact-form');
+
+  if (!form) {
+    const debugDiv = document.createElement('div');
+    debugDiv.style.cssText = `
+      position: fixed; top: 10px; left: 10px; right: 10px;
+      background: #f00; color: #fff; padding: 10px;
+      border-radius: 5px; z-index: 9999; font-size: 12px;
+    `;
+    debugDiv.textContent =
+      'ERRO: Formulário não encontrado no DOMContentLoaded!';
+    document.body.appendChild(debugDiv);
+    return;
+  }
+
+  form.addEventListener('submit', handleFormSubmit);
+});
+
+contactForm?.addEventListener('submit', handleFormSubmit);
+
+function handleFormSubmit(e) {
   e.preventDefault();
 
   // Mostrar debug na tela para mobile
@@ -248,7 +289,7 @@ contactForm.addEventListener('submit', function (e) {
       this.reset();
     }, 2000);
   }, 1000);
-});
+}
 
 /* ========================================
    7. FORMATAÇÃO DE TELEFONE BRASILEIRO
