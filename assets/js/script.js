@@ -176,7 +176,20 @@ document.querySelectorAll('[data-aos]').forEach(el => {
 contactForm.addEventListener('submit', function (e) {
   e.preventDefault();
 
-  console.log('Formulário enviado!');
+  // Mostrar debug na tela para mobile
+  function showDebug(message) {
+    const debugDiv = document.createElement('div');
+    debugDiv.style.cssText = `
+      position: fixed; top: 10px; left: 10px; right: 10px;
+      background: #000; color: #fff; padding: 10px;
+      border-radius: 5px; z-index: 9999; font-size: 12px;
+    `;
+    debugDiv.textContent = message;
+    document.body.appendChild(debugDiv);
+    setTimeout(() => debugDiv.remove(), 3000);
+  }
+
+  showDebug('Formulário enviado!');
 
   // Capturar dados do formulário
   const formData = new FormData(this);
@@ -187,16 +200,6 @@ contactForm.addEventListener('submit', function (e) {
   const date = formData.get('date');
   const guests = formData.get('guests');
   const message = formData.get('message');
-
-  console.log('Dados do formulário:', {
-    name,
-    phone,
-    email,
-    eventType,
-    date,
-    guests,
-    message,
-  });
 
   // Construir mensagem WhatsApp estruturada
   let whatsappMessage = `*Nova solicitação - Gallus Cozinha*\n\n`;
@@ -223,9 +226,7 @@ contactForm.addEventListener('submit', function (e) {
   // Gerar URL WhatsApp usando detecção inteligente de dispositivo
   const whatsappURL = generateWhatsAppURL('5519971174929', whatsappMessage);
 
-  // Debug: mostrar URL no console
-  console.log('WhatsApp URL:', whatsappURL);
-  console.log('É mobile?', isMobileDevice());
+  showDebug(`É mobile: ${isMobileDevice()}`);
 
   // Animação de feedback no botão
   const submitBtn = this.querySelector('.btn-form');
@@ -236,6 +237,7 @@ contactForm.addEventListener('submit', function (e) {
 
   // Redirecionar para WhatsApp - abordagem universal
   setTimeout(() => {
+    showDebug('Tentando abrir WhatsApp...');
     // Usar window.open sempre, mas com target específico para mobile
     window.open(whatsappURL, '_blank', 'noopener,noreferrer');
 
