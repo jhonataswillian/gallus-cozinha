@@ -174,63 +174,21 @@ document.querySelectorAll('[data-aos]').forEach(el => {
  * Redireciona para WhatsApp com dados formatados
  */
 
-// Verificar se o formulário existe
-if (!contactForm) {
-  console.error('Formulário não encontrado! ID: contactForm');
-  // Mostrar debug na tela
-  const debugDiv = document.createElement('div');
-  debugDiv.style.cssText = `
-    position: fixed; top: 10px; left: 10px; right: 10px;
-    background: #f00; color: #fff; padding: 10px;
-    border-radius: 5px; z-index: 9999; font-size: 12px;
-  `;
-  debugDiv.textContent = 'ERRO: Formulário não encontrado!';
-  document.body.appendChild(debugDiv);
-} else {
-  console.log('Formulário encontrado!');
-}
-
-// Abordagem alternativa - aguardar DOM carregar completamente
+// Configurar formulário quando DOM carregar
 document.addEventListener('DOMContentLoaded', function () {
   const form =
     document.getElementById('contactForm') ||
     document.querySelector('.contact-form');
 
-  if (!form) {
-    const debugDiv = document.createElement('div');
-    debugDiv.style.cssText = `
-      position: fixed; top: 10px; left: 10px; right: 10px;
-      background: #f00; color: #fff; padding: 10px;
-      border-radius: 5px; z-index: 9999; font-size: 12px;
-    `;
-    debugDiv.textContent =
-      'ERRO: Formulário não encontrado no DOMContentLoaded!';
-    document.body.appendChild(debugDiv);
-    return;
+  if (form) {
+    form.addEventListener('submit', handleFormSubmit);
   }
-
-  form.addEventListener('submit', handleFormSubmit);
 });
 
 contactForm?.addEventListener('submit', handleFormSubmit);
 
 function handleFormSubmit(e) {
   e.preventDefault();
-
-  // Mostrar debug na tela para mobile
-  function showDebug(message) {
-    const debugDiv = document.createElement('div');
-    debugDiv.style.cssText = `
-      position: fixed; top: 10px; left: 10px; right: 10px;
-      background: #000; color: #fff; padding: 10px;
-      border-radius: 5px; z-index: 9999; font-size: 12px;
-    `;
-    debugDiv.textContent = message;
-    document.body.appendChild(debugDiv);
-    setTimeout(() => debugDiv.remove(), 3000);
-  }
-
-  showDebug('Formulário enviado!');
 
   // Capturar dados do formulário
   const formData = new FormData(this);
@@ -264,10 +222,8 @@ function handleFormSubmit(e) {
 
   whatsappMessage += `\n💬 *Mensagem:*\n${message}`;
 
-  // Gerar URL WhatsApp usando detecção inteligente de dispositivo
+  // Gerar URL WhatsApp
   const whatsappURL = generateWhatsAppURL('5519971174929', whatsappMessage);
-
-  showDebug(`É mobile: ${isMobileDevice()}`);
 
   // Animação de feedback no botão
   const submitBtn = this.querySelector('.btn-form');
@@ -276,16 +232,12 @@ function handleFormSubmit(e) {
   submitBtn.innerHTML = '<i class="fas fa-check"></i> Redirecionando...';
   submitBtn.style.background = 'linear-gradient(135deg, #25D366, #128C7E)';
 
-  // Redirecionar para WhatsApp - MESMA LÓGICA DO BOTÃO FLUTUANTE
+  // Redirecionar para WhatsApp
   setTimeout(() => {
-    showDebug('Tentando abrir WhatsApp...');
-
     // Usar exatamente a mesma abordagem dos links WhatsApp
     try {
       window.open(whatsappURL, '_blank', 'noopener,noreferrer');
-      showDebug('Window.open executado!');
     } catch (error) {
-      showDebug('Erro: ' + error.message);
       // Fallback: criar link temporário e clicar
       const tempLink = document.createElement('a');
       tempLink.href = whatsappURL;
@@ -294,7 +246,6 @@ function handleFormSubmit(e) {
       document.body.appendChild(tempLink);
       tempLink.click();
       document.body.removeChild(tempLink);
-      showDebug('Link temporário usado!');
     }
 
     // Reset do botão e limpeza do formulário
@@ -303,7 +254,7 @@ function handleFormSubmit(e) {
       submitBtn.style.background = '';
       this.reset();
     }, 2000);
-  }, 500); // Reduzir delay para 500ms
+  }, 500);
 }
 
 /* ========================================
@@ -553,34 +504,6 @@ if ('serviceWorker' in navigator) {
    18. SISTEMA WHATSAPP INTELIGENTE
    ======================================== */
 
-/**
- * Detecta o tipo de dispositivo e gera link WhatsApp apropriado
- * Mobile: wa.me (melhor compatibilidade com apps nativos)
- * Desktop: api.whatsapp.com (melhor para WhatsApp Web)
- */
-function isMobileDevice() {
-  // Detecção mais robusta de dispositivos móveis
-  const userAgent = navigator.userAgent.toLowerCase();
-  const mobileKeywords = [
-    'android',
-    'webos',
-    'iphone',
-    'ipad',
-    'ipod',
-    'blackberry',
-    'iemobile',
-    'opera mini',
-    'mobile',
-    'phone',
-  ];
-
-  return (
-    mobileKeywords.some(keyword => userAgent.includes(keyword)) ||
-    'ontouchstart' in window ||
-    navigator.maxTouchPoints > 0 ||
-    window.innerWidth <= 768
-  );
-}
 
 /**
  * Gera URL WhatsApp inteligente baseada no dispositivo
